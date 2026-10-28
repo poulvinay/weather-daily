@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found | Weather Dashboard{% endblock %}
+
+{% block extra_head %}
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            background: var(--bg-main, #0f172a);
+            color: var(--text-main, #f8fafc);
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .error-container {
+            padding: 40px;
+            background: var(--bg-card, rgba(30, 41, 59, 0.7));
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        h1 {
+            font-size: 8rem;
+            margin: 0;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+        p {
+            font-size: 1.25rem;
+            margin: 20px 0 30px;
+            opacity: 0.8;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+        .icon-404 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ef4444;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <div class="icon-404">
+        <i class="fa-solid fa-cloud-bolt"></i>
+    </div>
+    <h1>404</h1>
+    <p>The weather is clear here, but the page you're looking for has drifted away.</p>
+    <a href="/" class="btn">
+        <i class="fa-solid fa-house"></i>
+        Back to Dashboard
+    </a>
+</div>
+{% endblock %}

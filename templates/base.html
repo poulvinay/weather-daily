@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}Weather Dashboard{% endblock %}</title>
+
+    <meta name="description" content="{% block description %}Get real-time weather forecasts, interactive Mapbox maps, and detailed environmental data for any city worldwide.{% endblock %}">
+    <meta name="keywords" content="weather, forecast, Pune weather, Japan weather, real-time weather, weather map, precipitation, wind speed, humidity, UV index">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://weather-dashboard.example.com/">
+    <meta property="og:title" content="Weather Dashboard - Premium Forecasts">
+    <meta property="og:description" content="Real-time weather tracking with interactive maps and detailed charts.">
+    <meta property="og:image" content="/static/icons/icon-512.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Weather Dashboard">
+    <meta property="twitter:description" content="Real-time weather tracking with interactive maps and detailed charts.">
+    <meta property="twitter:image" content="/static/icons/icon-512.png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/static/favicon.ico">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% block extra_head %}{% endblock %}
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Weather Dashboard",
+      "description": "Real-time weather forecast and mapping application.",
+      "url": "https://weather-dashboard.example.com",
+      "applicationCategory": "WeatherService",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "screenshot": "https://weather-dashboard.example.com/static/icons/icon-512.png",
+      "author": {
+        "@type": "Organization",
+        "name": "Weather Dashboard Team"
+      }
+    }
+    </script>
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

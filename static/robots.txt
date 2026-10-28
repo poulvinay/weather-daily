@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://weather-dashboard.example.com/sitemap.xml

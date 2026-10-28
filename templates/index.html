@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Weather Dashboard - Real-time Forecasts & Maps{% endblock %}
+
+{% block extra_head %}
+    <script>window.MAPBOX_TOKEN = {{ mapbox_token|tojson }};</script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.20.0/mapbox-gl.js"></script>
+{% endblock %}
+
+{% block content %}
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fa-solid fa-moon"></i>
+        <span>Dark</span>
+    </button>
+
+    <div class="container">
+
+        <div class="header">
+
+            <div class="header-info">
+                <div class="city" id="city">Loading...</div>
+                <div class="time" id="time"></div>
+            </div>
+
+            <div class="header-controls">
+                <div class="search-container">
+                    <form id="searchForm" class="search">
+                        <input id="searchInput" name="q" placeholder="Search location" autocomplete="off">
+                        <button type="submit">Search</button>
+                        <button type="button" id="locateBtn" onclick="goToCurrentLocation()" title="Go to my location"
+                            aria-label="Go to my current location">
+                            <i class="fa-solid fa-location-crosshairs"></i>
+                        </button>
+                    </form>
+                    <div id="searchSuggestions" class="search-suggestions"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="map"></div>
+        <div class="map-info">
+            <div class="map-info-left">
+                <button class="map-info-trigger" id="mapInfoButton" type="button" aria-label="Map help and shortcuts">
+                    <i class="fa-solid fa-circle-info"></i>
+                </button>
+                <span id="mapLastUpdated">Last updated: --</span>
+            </div>
+        </div>
+
+
+        <div class="weather-main">
+            <div class="main-display">
+                <img id="icon" width="80">
+                <div>
+                    <div class="temp" id="temp"></div>
+                    <div class="condition" id="condition"></div>
+                    <div class="temp-summary">
+                        <span id="mainTempAvg">Avg --</span>
+                        <span id="mainTempMin">Min --</span>
+                        <span id="mainTempMax">Max --</span>
+                    </div>
+                </div>
+            </div>
+            <div class="weather-meta">
+                <div class="meta-pill">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span id="mainHumidity">--%</span>
+                </div>
+                <div class="meta-pill">
+                    <i class="fa-solid fa-wind"></i>
+                    <span id="mainWind">-- km/h</span>
+                </div>
+                <div class="meta-pill">
+                    <i class="fa-solid fa-sun"></i>
+                    <span id="mainUV">UV --</span>
+                </div>
+                <div class="meta-pill">
+                    <i class="fa-solid fa-temperature-half"></i>
+                    <span id="mainFeels">Feels --</span>
+                </div>
+                <div class="meta-pill">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span id="mainPressure">-- mb</span>
+                </div>
+                <div class="meta-pill">
+                    <i class="fa-solid fa-eye"></i>
+                    <span id="mainVisibility">-- km</span>
+                </div>
+            </div>
+            <button class="dev-info" id="dev-info" onclick="window.location.href='https://thevinay.pythonanywhere.com'">
+                Developed by Vinay Poul
+            </button>
+        </div>
+
+
+        <div class="bottom-nav">
+            <button class="nav-btn" id="btnToday" onclick="openSlider('forecast', 0)">Today</button>
+            <button class="nav-btn" id="btnDay1" onclick="openSlider('forecast', 1)">Tomorrow</button>
+            <button class="nav-btn" id="btnDay2" onclick="openSlider('forecast', 2)">Later</button>
+            <button class="nav-btn" id="btnCharts" onclick="openSlider('charts')">Overall Stats</button>
+        </div>
+
+        <div id="sliderOverlay" class="slider-overlay" onclick="closeSliders()"></div>
+
+        <div id="forecastSlider" class="bottom-slider">
+            <div class="slider-header">
+                <h2 id="sliderTitle">Forecast</h2>
+                <button class="close-slider" onclick="closeSliders()">&times;</button>
+            </div>
+            <div class="slider-content">
+                <div class="grid" id="stats"></div>
+                <div class="forecast-grid" id="forecast"></div>
+            </div>
+        </div>
+
+        <div id="chartsSlider" class="bottom-slider">
+            <div class="slider-header">
+                <h2>Overall Stats</h2>
+                <button class="close-slider" onclick="closeSliders()">&times;</button>
+            </div>
+            <div class="slider-content">
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <canvas id="forecastChartTemp"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <canvas id="forecastChartPrecip"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <canvas id="forecastChartWind"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <canvas id="forecastChartHumUV"></canvas>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+
+
+    <div class="map-info-modal" id="mapInfoModal" aria-hidden="true">
+        <div class="map-info-modal-content">
+            <div class="map-info-modal-header">
+                <h2>Map controls & shortcuts</h2>
+                <button class="map-info-modal-close" id="mapInfoClose" type="button" aria-label="Close help">
+                    &times;
+                </button>
+            </div>
+            <div class="map-info-modal-section">
+                <h3>Keyboard (map focus)</h3>
+                <ul>
+                    <li>= / + : Increase zoom by 1</li>
+                    <li>Shift+= / Shift+ + : Increase zoom by 2</li>
+                    <li>- : Decrease zoom by 1</li>
+                    <li>Shift+- : Decrease zoom by 2</li>
+                    <li>Arrow keys: Pan by 100px</li>
+                    <li>Shift+→ / Shift+← : Rotate by ±15°</li>
+                    <li>Shift+↑ / Shift+↓ : Change pitch by ±10°</li>
+                    <li>Shift+S : Jump to search bar</li>
+                    <li>Shift+? : Open this help popup</li>
+                </ul>
+            </div>
+            <div class="map-info-modal-section">
+                <h3>Mouse / touch</h3>
+                <ul>
+                    <li>Drag with left mouse: Pan the map</li>
+                    <li>Scroll wheel / trackpad pinch: Zoom in or out</li>
+                    <li>Right‑click + drag (or Ctrl/Cmd + drag): Rotate and tilt</li>
+                    <li>Double‑click: Zoom in on clicked location</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/app.js', v=4) }}"></script>
+{% endblock %}
