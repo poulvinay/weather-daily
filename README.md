@@ -3,7 +3,7 @@
 A Flask-based weather dashboard with a Mapbox map, 3-day forecast, hourly breakdowns, rain/snow effects, and light/dark theme. Weather data is fetched from [WeatherAPI](https://www.weatherapi.com/) via an AJAX endpoint (`/weather`).
 
 <video width="100%" autoplay muted loop playsinline>
-  <source src="./static/demo_walkthrough.mp4" type="video/mp4">
+  <source src="https://github.com/poulvinay/weather-daily/blob/main/static/demo_walkthrough.mp4" type="video/mp4">
 </video>
 
 ## Project Structure
